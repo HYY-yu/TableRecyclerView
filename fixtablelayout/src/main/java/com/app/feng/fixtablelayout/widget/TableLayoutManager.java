@@ -22,12 +22,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private SparseArray<Rect> mItemAnchorMap = new SparseArray<>();
 
     //    Bitmap titleViewBitmap;
-
-    private int holdColumnIndex = -1; // 横向滚动时,保证那一列不动
-
     //    private Rect displayFrame = new Rect();
-
-    private View titleView;
 
     public TableLayoutManager(Context context) {
         super();
@@ -62,11 +57,6 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             for (int i = getChildCount() - 1; i >= 0; i--) {
                 View child = getChildAt(i);
 
-//                if (child == titleView) {
-//                    //禁止回收
-//                    continue;
-//                }
-
                 if (dy > 0) {//需要回收当前屏幕，上越界的View
                     if (getDecoratedBottom(child) < offsetTop) {
                         removeAndRecycleView(child,recycler);
@@ -100,7 +90,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 //                      " child width " + child.getMeasuredWidth() + "child height" + child.getMeasuredHeight());
 
                 if (offsetTop - dy > getHeight()) {
-                    // 够了
+                    // 到了屏幕的末尾 退出布局
                     removeAndRecycleView(child,recycler);
                     lastVisPos = i - 1;
                 } else {
@@ -116,19 +106,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                     offsetTop += h;
 
                     // 布局到RV上
-
-//                    if (titleView == null && getItemViewType(child) == TableAdapter.TITLE) {
-//                        titleView = child;
-//                        //titleView 永远显示在RV的顶部
-//                        layoutDecorated(titleView,0,0,titleView.getMeasuredWidth(),
-//                                        titleView.getMeasuredHeight());
-//                    } else if (titleView == child) {
-//                        //不动
-//                        layoutDecorated(titleView,0,0,titleView.getMeasuredWidth(),
-//                                        titleView.getMeasuredHeight());
-//                    } else {
                         layoutDecorated(child,aRect.left,aRect.top,aRect.right,aRect.bottom);
-//                    }
                 }
             }
             //添加完后，判断是否已经没有更多的ItemView，并且此时屏幕仍有空白，则需要修正dy

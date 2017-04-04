@@ -111,6 +111,12 @@ public class FixTableLayout extends FrameLayout {
 
     }
 
+    public void setAdapter(
+            IDataAdapter dataAdapter) {
+        this.dataAdapter = dataAdapter;
+        initViews();
+    }
+
     private void initViews() {
         leftViews.setLayoutManager(new LinearLayoutManager(getContext()));
         leftViews.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
@@ -154,11 +160,4 @@ public class FixTableLayout extends FrameLayout {
             }
         });
     }
-
-    public void setAdapter(
-            IDataAdapter dataAdapter) {
-        this.dataAdapter = dataAdapter;
-        initViews();
-    }
-
 }
