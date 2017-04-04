@@ -16,7 +16,6 @@
 
         <attr name="fixtable_show_item_divider" format="boolean"/>
         <attr name="fixtable_show_left_view_shadow" format="boolean"/>
-
     </declare-styleable>
 
 </resources>

@@ -5,14 +5,17 @@
               android:layout_height="match_parent">
 
     <com.app.feng.fixtablelayout.FixTableLayout
+        android:id="@+id/fixTableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:fixtable_divider_color="@color/table_divider_color"
+        app:fixtable_title_color="#C5CDEF"
         app:fixtable_divider_height="@dimen/table_divider_height"
         app:fixtable_item_gravity="CENTER"
         app:fixtable_item_top_bottom_padding="8dp"
         app:fixtable_item_width="100dp"
-        app:fixtable_s_color="#D9ECF4"
+        app:fixtable_s_color="#C5EFD8"
+        app:fixtable_show_left_view_shadow="true"
         />
 
 </LinearLayout>

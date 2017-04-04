@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import com.app.feng.fixtablelayout.adapter.IDataAdapter;
 import com.app.feng.fixtablelayout.adapter.TableAdapter;
 import com.app.feng.fixtablelayout.widget.SingleLineItemDecoration;
 import com.app.feng.fixtablelayout.widget.TableLayoutManager;
@@ -27,6 +28,7 @@ public class FixTableLayout extends FrameLayout {
     HorizontalScrollView titleView;
     RecyclerView leftViews;
     TextView left_top_view;
+    View leftViewShadow;
 
     int divider_height;
     int divider_color;
@@ -35,6 +37,9 @@ public class FixTableLayout extends FrameLayout {
     int item_width;
     int item_padding;
     int item_gravity;
+
+    boolean show_left_shadow = false;
+    private IDataAdapter dataAdapter;
 
     public FixTableLayout(Context context) {
         this(context,null);
@@ -87,6 +92,9 @@ public class FixTableLayout extends FrameLayout {
 
         }
 
+        show_left_shadow = array.getBoolean(
+                R.styleable.FixTableLayout_fixtable_show_left_view_shadow,false);
+
         array.recycle();
 
         View view = inflate(context,R.layout.table_view,null);
@@ -99,7 +107,11 @@ public class FixTableLayout extends FrameLayout {
         titleView = (HorizontalScrollView) view.findViewById(R.id.titleView);
         leftViews = (RecyclerView) view.findViewById(R.id.leftViews);
         left_top_view = (TextView) view.findViewById(R.id.left_top_view);
+        leftViewShadow = view.findViewById(R.id.leftView_shadows);
 
+    }
+
+    private void initViews() {
         leftViews.setLayoutManager(new LinearLayoutManager(getContext()));
         leftViews.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
         leftViews.setOnTouchListener(new OnTouchListener() {
@@ -110,6 +122,11 @@ public class FixTableLayout extends FrameLayout {
                 return true;
             }
         });
+        if (show_left_shadow) {
+            leftViewShadow.setVisibility(VISIBLE);
+        } else {
+            leftViewShadow.setVisibility(GONE);
+        }
 
         TableAdapter.Builder builder = new TableAdapter.Builder();
         TableAdapter tableAdapter = builder.setLeft_top_view(left_top_view)
@@ -118,8 +135,8 @@ public class FixTableLayout extends FrameLayout {
                         new TableAdapter.ParametersHolder(s_color,title_color,item_width,
                                                           item_padding,item_gravity))
                 .setLeftViews(leftViews)
+                .setDataAdapter(dataAdapter)
                 .create();
-
         recyclerView.setAdapter(tableAdapter);
         recyclerView.setLayoutManager(new TableLayoutManager(getContext()));
         recyclerView.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
@@ -137,4 +154,11 @@ public class FixTableLayout extends FrameLayout {
             }
         });
     }
+
+    public void setAdapter(
+            IDataAdapter dataAdapter) {
+        this.dataAdapter = dataAdapter;
+        initViews();
+    }
+
 }
