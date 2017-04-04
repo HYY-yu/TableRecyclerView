@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.feng.tablerecylerview.MainActivity">
+    tools:context="com.app.feng.tablerecyclerview.MainActivity">
 
     <HorizontalScrollView
         android:id="@+id/titleView"
@@ -13,47 +13,12 @@
         android:layout_height="wrap_content"
         android:scrollbars="none">
 
-        <com.app.feng.tablerecylerview.widget.SingleLineLinearLayout
+        <com.app.feng.tablerecyclerview.widget.SingleLineLinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
 
-                android:text="fdafdsafasd"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="fdafdsafasd"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="fdafdsafasd"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="fdafdsafasd"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="fdafdsafasd"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="fdafdsafasd"/>
-
-        </com.app.feng.tablerecylerview.widget.SingleLineLinearLayout>
+        </com.app.feng.tablerecyclerview.widget.SingleLineLinearLayout>
 
     </HorizontalScrollView>
 

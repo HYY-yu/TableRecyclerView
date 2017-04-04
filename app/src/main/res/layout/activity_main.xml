@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.app.feng.tablerecylerview.FixTableLayout
+    <com.app.feng.fixtablelayout.FixTableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:fixtable_divider_color="@color/table_divider_color"
+        app:fixtable_divider_height="@dimen/table_divider_height"
+        app:fixtable_item_gravity="CENTER"
+        app:fixtable_item_top_bottom_padding="8dp"
+        app:fixtable_item_width="100dp"
+        app:fixtable_s_color="#D9ECF4"
+        />
 
 </LinearLayout>
 

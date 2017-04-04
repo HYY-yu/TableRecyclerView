@@ -1,4 +1,4 @@
-package com.app.feng.tablerecylerview.widget;
+package com.app.feng.fixtablelayout.widget;
 
 import android.content.Context;
 import android.graphics.Rect;

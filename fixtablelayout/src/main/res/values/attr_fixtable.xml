@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FixTableLayout">
+        <attr name="fixtable_divider_color" format="color"/>
+        <attr name="fixtable_divider_height" format="dimension"/>
+        <attr name="fixtable_s_color" format="color"/>
+        <attr name="fixtable_title_color" format="color"/>
+        <attr name="fixtable_item_width" format="dimension"/>
+        <attr name="fixtable_item_top_bottom_padding" format="dimension"/>
+        <attr name="fixtable_item_gravity" format="enum">
+            <enum name="CENTER" value="0"/>
+            <enum name="LEFT" value="1"/>
+            <enum name="RIGHT" value="2"/>
+        </attr>
+
+        <attr name="fixtable_show_item_divider" format="boolean"/>
+        <attr name="fixtable_show_left_view_shadow" format="boolean"/>
+
+    </declare-styleable>
+
+</resources>

@@ -1,4 +1,4 @@
-package com.app.feng.tablerecylerview;
+package com.app.feng.tablerecyclerview;
 
 import org.junit.Test;
 
