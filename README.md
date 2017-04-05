@@ -1,5 +1,5 @@
 # TableRecylerView
-LayoutManager实现的复杂表格控件
+LayoutManager实现的大表格控件
 
 --- 
 初步实现效果,欢迎issues和fork
