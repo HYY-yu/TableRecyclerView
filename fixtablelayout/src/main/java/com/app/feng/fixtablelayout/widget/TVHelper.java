@@ -23,6 +23,5 @@ public class TVHelper {
         textView.setMinWidth(minWidth);
 
         textView.setPadding(0,padding / 2,0,padding / 2);
-
     }
 }

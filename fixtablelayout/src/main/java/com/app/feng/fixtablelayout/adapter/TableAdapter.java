@@ -1,6 +1,5 @@
 package com.app.feng.fixtablelayout.adapter;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +16,13 @@ import com.app.feng.fixtablelayout.widget.TVHelper;
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> {
 
-    HorizontalScrollView titleView;
-    RecyclerView leftViews;
-    TextView left_top_view;
-    SingleLineLinearLayout titleChild;
+    private HorizontalScrollView titleView;
+    private RecyclerView leftViews;
+    private TextView left_top_view;
 
-    ParametersHolder parametersHolder;
+    private ParametersHolder parametersHolder;
 
-    IDataAdapter dataAdapter;
+    private IDataAdapter dataAdapter;
 
     private TableAdapter(
             HorizontalScrollView titleView,RecyclerView leftViews,TextView left_top_view,
@@ -45,7 +43,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
                              parametersHolder.item_width,parametersHolder.item_padding);
 
         leftViews.setAdapter(new LeftViewAdapter());
-        titleChild = ((SingleLineLinearLayout) titleView.getChildAt(0));
+        SingleLineLinearLayout titleChild = ((SingleLineLinearLayout) titleView.getChildAt(0));
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
             TextView textView = TVHelper.generateTextView(titleChild.getContext(),
@@ -78,7 +76,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     @Override
     public void onBindViewHolder(TableViewHolder holder,int position) {
         SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
-        ll_content.setBackgroundColor(Color.WHITE);
+        ll_content.setBackgroundColor(parametersHolder.col_2_color);
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
             TextView textView = (TextView) ll_content.getChildAt(i);
@@ -88,9 +86,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
         //给奇数列设置背景
         if (position % 2 != 0) {
-            ll_content.setBackgroundColor(parametersHolder.s_color);
+            ll_content.setBackgroundColor(parametersHolder.col_1_color);
         }
-
     }
 
     @Override
@@ -99,7 +96,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     }
 
     class TableViewHolder extends RecyclerView.ViewHolder {
-        public TableViewHolder(View itemView) {
+        TableViewHolder(View itemView) {
             super(itemView);
         }
     }
@@ -111,9 +108,9 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
             TVHelper.setTextView(child," ",parametersHolder.item_gravity,
                                  parametersHolder.item_width,parametersHolder.item_padding);
 
-            child.setBackgroundColor(Color.WHITE);
+            child.setBackgroundColor(parametersHolder.col_2_color);
             if (position % 2 != 0) {
-                child.setBackgroundColor(parametersHolder.s_color);
+                child.setBackgroundColor(parametersHolder.col_1_color);
             }
 
             dataAdapter.convertLeftData(position,child);
@@ -137,22 +134,25 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         }
 
         class LeftViewHolder extends RecyclerView.ViewHolder {
-            public LeftViewHolder(View itemView) {
+            LeftViewHolder(View itemView) {
                 super(itemView);
             }
         }
     }
 
     public static class ParametersHolder {
-        int s_color;
+        int col_1_color;
         int title_color;
         int item_width;
         int item_padding;
         int item_gravity;
+        int col_2_color;
 
         public ParametersHolder(
-                int s_color,int title_color,int item_width,int item_padding,int item_gravity) {
-            this.s_color = s_color;
+                int s_color,int b_color,int title_color,int item_width,int item_padding,
+                int item_gravity) {
+            this.col_1_color = s_color;
+            this.col_2_color = b_color;
             this.title_color = title_color;
             this.item_width = item_width;
             this.item_padding = item_padding;
@@ -199,6 +199,3 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         }
     }
 }
-
-
-

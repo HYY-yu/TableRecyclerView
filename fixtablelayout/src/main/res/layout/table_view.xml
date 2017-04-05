@@ -21,7 +21,7 @@
     </HorizontalScrollView>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recylerView"
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#fff"
@@ -34,11 +34,12 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/leftViews"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/shadow_bg"
         android:overScrollMode="never"
         android:scrollbars="none"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/left_top_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleView"
         >

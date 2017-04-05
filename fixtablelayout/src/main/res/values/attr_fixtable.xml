@@ -4,7 +4,8 @@
     <declare-styleable name="FixTableLayout">
         <attr name="fixtable_divider_color" format="color"/>
         <attr name="fixtable_divider_height" format="dimension"/>
-        <attr name="fixtable_s_color" format="color"/>
+        <attr name="fixtable_column_1_color" format="color"/>
+        <attr name="fixtable_column_2_color" format="color"/>
         <attr name="fixtable_title_color" format="color"/>
         <attr name="fixtable_item_width" format="dimension"/>
         <attr name="fixtable_item_top_bottom_padding" format="dimension"/>

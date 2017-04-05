@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -32,7 +31,8 @@ public class FixTableLayout extends FrameLayout {
 
     int divider_height;
     int divider_color;
-    int s_color;
+    int col_1_color;
+    int col_2_color;
     int title_color;
     int item_width;
     int item_padding;
@@ -52,17 +52,6 @@ public class FixTableLayout extends FrameLayout {
 
     public FixTableLayout(Context context,@Nullable AttributeSet attrs,int defStyleAttr) {
         super(context,attrs,defStyleAttr);
-        //        <attr name="fixtable_divider_color" format="color"/>
-        //        <attr name="fixtable_divider_height" format="dimension"/>
-        //        <attr name="fixtable_s_color" format="color"/>
-        //        <attr name="fixtable_title_color" format="color"/>
-        //        <attr name="fixtable_item_width" format="dimension"/>
-        //        <attr name="fixtable_item_top_bottom_padding" format="dimension"/>
-        //
-        //        <attr name="fixtable_show_item_divider" format="boolean"/>
-        //        <attr name="fixtable_show_left_view_shadow" format="boolean"/>
-        //        <attr name="fixtable_item_gravity" format="enum">
-
 
         TypedArray array = context.obtainStyledAttributes(attrs,R.styleable.FixTableLayout);
 
@@ -71,7 +60,9 @@ public class FixTableLayout extends FrameLayout {
         divider_color = array.getColor(R.styleable.FixTableLayout_fixtable_divider_color,
                                        Color.BLACK);
 
-        s_color = array.getColor(R.styleable.FixTableLayout_fixtable_s_color,Color.BLUE);
+        col_1_color = array.getColor(R.styleable.FixTableLayout_fixtable_column_1_color,Color.BLUE);
+        col_2_color = array.getColor(R.styleable.FixTableLayout_fixtable_column_2_color,
+                                     Color.WHITE);
         title_color = array.getColor(R.styleable.FixTableLayout_fixtable_title_color,Color.GRAY);
         item_width = array.getDimensionPixelOffset(R.styleable.FixTableLayout_fixtable_item_width,
                                                    400);
@@ -84,12 +75,11 @@ public class FixTableLayout extends FrameLayout {
                 item_gravity = Gravity.CENTER;
                 break;
             case 1:
-                item_gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
+                item_gravity = Gravity.START | Gravity.CENTER_VERTICAL;
                 break;
             case 2:
-                item_gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
+                item_gravity = Gravity.END | Gravity.CENTER_VERTICAL;
                 break;
-
         }
 
         show_left_shadow = array.getBoolean(
@@ -103,22 +93,13 @@ public class FixTableLayout extends FrameLayout {
     }
 
     private void init(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         titleView = (HorizontalScrollView) view.findViewById(R.id.titleView);
         leftViews = (RecyclerView) view.findViewById(R.id.leftViews);
         left_top_view = (TextView) view.findViewById(R.id.left_top_view);
         leftViewShadow = view.findViewById(R.id.leftView_shadows);
 
-    }
-
-    public void setAdapter(
-            IDataAdapter dataAdapter) {
-        this.dataAdapter = dataAdapter;
-        initViews();
-    }
-
-    private void initViews() {
-        leftViews.setLayoutManager(new LinearLayoutManager(getContext()));
+        leftViews.setLayoutManager(new TableLayoutManager());
         leftViews.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
         leftViews.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -128,24 +109,16 @@ public class FixTableLayout extends FrameLayout {
                 return true;
             }
         });
+
         if (show_left_shadow) {
             leftViewShadow.setVisibility(VISIBLE);
         } else {
             leftViewShadow.setVisibility(GONE);
         }
 
-        TableAdapter.Builder builder = new TableAdapter.Builder();
-        TableAdapter tableAdapter = builder.setLeft_top_view(left_top_view)
-                .setTitleView(titleView)
-                .setParametersHolder(
-                        new TableAdapter.ParametersHolder(s_color,title_color,item_width,
-                                                          item_padding,item_gravity))
-                .setLeftViews(leftViews)
-                .setDataAdapter(dataAdapter)
-                .create();
-        recyclerView.setAdapter(tableAdapter);
-        recyclerView.setLayoutManager(new TableLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new TableLayoutManager());
         recyclerView.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView,int newState) {
@@ -159,5 +132,24 @@ public class FixTableLayout extends FrameLayout {
                 leftViews.scrollBy(0,dy);
             }
         });
+    }
+
+    public void setAdapter(
+            IDataAdapter dataAdapter) {
+        this.dataAdapter = dataAdapter;
+        initAdapter();
+    }
+
+    private void initAdapter() {
+        TableAdapter.Builder builder = new TableAdapter.Builder();
+        TableAdapter tableAdapter = builder.setLeft_top_view(left_top_view)
+                .setTitleView(titleView)
+                .setParametersHolder(
+                        new TableAdapter.ParametersHolder(col_1_color,col_2_color,title_color,
+                                                          item_width,item_padding,item_gravity))
+                .setLeftViews(leftViews)
+                .setDataAdapter(dataAdapter)
+                .create();
+        recyclerView.setAdapter(tableAdapter);
     }
 }

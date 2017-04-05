@@ -29,7 +29,7 @@ public class SingleLineLinearLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec) {
-        // 父View 不能限制我们的宽度。模式必须是UNSPECIFIED  高度取子View最大
+        // 父View 不能限制我们。模式是UNSPECIFIED  宽度所有子View宽总和, 高度取子View最大
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
@@ -68,7 +68,6 @@ public class SingleLineLinearLayout extends ViewGroup {
             } else if (tempB != tempHeight) {
                 tempB = tempHeight;
             }
-            //            Log.d("feng","看看每个View 的tempLeft i：" + i + " tempL：" + tempLeft + "  tempB :" + tempB);
             childView.layout(tempLeft,tempT,tempRight,tempB);
             tempLeft += childView.getMeasuredWidth();
         }

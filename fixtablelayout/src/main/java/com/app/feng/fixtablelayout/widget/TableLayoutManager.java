@@ -1,6 +1,5 @@
 package com.app.feng.fixtablelayout.widget;
 
-import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -13,18 +12,18 @@ import android.view.ViewGroup;
 
 public class TableLayoutManager extends RecyclerView.LayoutManager {
 
-    int verticalOffset;
-    int horizontalOffset;
+    private int verticalOffset;
+    private int horizontalOffset;
 
-    int firstVisPos;
-    int lastVisPos;
+    private int firstVisPos;
+    private int lastVisPos;
 
     private SparseArray<Rect> mItemAnchorMap = new SparseArray<>();
 
     //    Bitmap titleViewBitmap;
     //    private Rect displayFrame = new Rect();
 
-    public TableLayoutManager(Context context) {
+    public TableLayoutManager() {
         super();
     }
 
@@ -86,8 +85,9 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 addView(child);
 
                 measureChild(child,0,0);
-                //                Log.i("feng",
-                //                      " child width " + child.getMeasuredWidth() + "child height" + child.getMeasuredHeight());
+
+//                Log.i("feng",
+//                      " child width " + child.getMeasuredWidth() + "child height" + child.getMeasuredHeight());
 
                 if (offsetTop - dy > getHeight()) {
                     // 到了屏幕的末尾 退出布局
@@ -239,7 +239,6 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         if (viewSpan < getVerticalSpace()) {
             return 0;
         }
-
 
         if (verticalOffset + realOffset < 0) {
             //下划到了顶部

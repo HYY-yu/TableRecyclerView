@@ -13,10 +13,10 @@ import android.view.View;
 
 public class SingleLineItemDecoration extends RecyclerView.ItemDecoration {
 
-    int lineHeight = 4;
-    int lineColor = Color.BLACK;
+    private int lineHeight = 4;
+    private int lineColor = Color.BLACK;
 
-    Paint paint;
+    private Paint paint;
 
     public SingleLineItemDecoration(int divider_height,int divider_color) {
         lineHeight = divider_height;
