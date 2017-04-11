@@ -6,8 +6,12 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import com.app.feng.fixtablelayout.inter.IDataAdapter;
 import com.app.feng.fixtablelayout.widget.SingleLineLinearLayout;
 import com.app.feng.fixtablelayout.widget.TVHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -15,6 +19,9 @@ import com.app.feng.fixtablelayout.widget.TVHelper;
  */
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> {
+
+    public static final int VIEW_TYPE_NORMAL = 1;
+    public static final int VIEW_TYPE_FOOTER = -1;
 
     private HorizontalScrollView titleView;
     private RecyclerView leftViews;
@@ -59,6 +66,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     @Override
     public TableViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
+
         SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(
                 parent.getContext());
 
@@ -77,12 +85,13 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     public void onBindViewHolder(TableViewHolder holder,int position) {
         SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
         ll_content.setBackgroundColor(parametersHolder.col_2_color);
+        List<TextView> bindViews = new ArrayList<>();
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
             TextView textView = (TextView) ll_content.getChildAt(i);
-
-            dataAdapter.convertData(position,textView,i);
+            bindViews.add(textView);
         }
+        dataAdapter.convertData(position,bindViews);
 
         //给奇数列设置背景
         if (position % 2 != 0) {
@@ -197,5 +206,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
             this.dataAdapter = dataAdapter;
             return this;
         }
+    }
+
+    public void notifyLoadData(int startPos,int loadNum) {
+        notifyItemRangeInserted(startPos,loadNum);
+        leftViews.getAdapter()
+                .notifyItemRangeInserted(startPos,loadNum);
     }
 }

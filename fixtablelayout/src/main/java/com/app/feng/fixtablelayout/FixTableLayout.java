@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,8 +14,9 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-import com.app.feng.fixtablelayout.adapter.IDataAdapter;
 import com.app.feng.fixtablelayout.adapter.TableAdapter;
+import com.app.feng.fixtablelayout.inter.IDataAdapter;
+import com.app.feng.fixtablelayout.inter.ILoadMoreListener;
 import com.app.feng.fixtablelayout.widget.SingleLineItemDecoration;
 import com.app.feng.fixtablelayout.widget.TableLayoutManager;
 
@@ -28,6 +30,7 @@ public class FixTableLayout extends FrameLayout {
     RecyclerView leftViews;
     TextView left_top_view;
     View leftViewShadow;
+    FrameLayout fl_load_mask;
 
     int divider_height;
     int divider_color;
@@ -40,6 +43,13 @@ public class FixTableLayout extends FrameLayout {
 
     boolean show_left_shadow = false;
     private IDataAdapter dataAdapter;
+
+    private boolean isLoading = false;
+    private ILoadMoreListener loadMoreListener;
+
+    public void setLoadMoreListener(ILoadMoreListener loadMoreListener) {
+        this.loadMoreListener = loadMoreListener;
+    }
 
     public FixTableLayout(Context context) {
         this(context,null);
@@ -98,6 +108,7 @@ public class FixTableLayout extends FrameLayout {
         leftViews = (RecyclerView) view.findViewById(R.id.leftViews);
         left_top_view = (TextView) view.findViewById(R.id.left_top_view);
         leftViewShadow = view.findViewById(R.id.leftView_shadows);
+        fl_load_mask = (FrameLayout) view.findViewById(R.id.load_mask);
 
         leftViews.setLayoutManager(new TableLayoutManager());
         leftViews.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
@@ -132,12 +143,57 @@ public class FixTableLayout extends FrameLayout {
                 leftViews.scrollBy(0,dy);
             }
         });
+
     }
 
     public void setAdapter(
             IDataAdapter dataAdapter) {
         this.dataAdapter = dataAdapter;
         initAdapter();
+    }
+
+    int lastVisablePos = -1;
+
+    public void enableLoadMoreData() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView,int newState) {
+                super.onScrollStateChanged(recyclerView,newState);
+                // 当用户滑动到底部并且使用fling手势
+                if (newState == RecyclerView.SCROLL_STATE_SETTLING && lastVisablePos == recyclerView.getAdapter()
+                        .getItemCount() - 1) {
+
+                    if (!isLoading) {
+                        isLoading = true;
+                        fl_load_mask.setVisibility(VISIBLE);
+                        TableAdapter tableAdapter = (TableAdapter) recyclerView.getAdapter();
+                        int startPos = tableAdapter.getItemCount();
+
+                        int loadNum = loadMoreListener.loadMoreData();
+                        if (loadNum > 0) {
+                            //通知Adapter更新数据
+                            tableAdapter.notifyLoadData(startPos,loadNum);
+                        }
+
+                        Log.i("fixtablelayout","load more completed loadNum :" + loadNum);
+
+                        fl_load_mask.setVisibility(GONE);
+                        isLoading = false;
+                    }
+                }
+                //                    Log.i("feng","滑动到底部 -- 此时的View Bottom：" + recyclerView.getLayoutManager()
+                //                            .getDecoratedBottom
+                //                            (bottomView) + " recyclerView Height:" +recyclerView.getHeight());
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView,int dx,int dy) {
+                super.onScrolled(recyclerView,dx,dy);
+                View bottomView = recyclerView.getChildAt(recyclerView.getChildCount() - 1);
+                lastVisablePos = recyclerView.getChildAdapterPosition(bottomView);
+            }
+        });
     }
 
     private void initAdapter() {

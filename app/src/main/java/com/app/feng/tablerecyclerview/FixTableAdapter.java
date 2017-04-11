@@ -2,7 +2,10 @@ package com.app.feng.tablerecyclerview;
 
 import android.widget.TextView;
 
-import com.app.feng.fixtablelayout.adapter.IDataAdapter;
+import com.app.feng.fixtablelayout.inter.IDataAdapter;
+import com.app.feng.tablerecyclerview.bean.DataBean;
+
+import java.util.List;
 
 /**
  * Created by feng on 2017/4/4.
@@ -12,17 +15,14 @@ public class FixTableAdapter implements IDataAdapter {
 
     public String[] titles;
 
-    public String[][] data;
+    public List<DataBean> data;
 
-    public FixTableAdapter(String[] titles,String[][] data) {
-        if(titles.length < 2){
-            throw new ArrayIndexOutOfBoundsException("title array length error");
-        }
-        if(data.length > 0 && data[0].length != titles.length){
-            throw new ArrayIndexOutOfBoundsException("data array length error");
-        }
-
+    public FixTableAdapter(String[] titles,List<DataBean> data) {
         this.titles = titles;
+        this.data = data;
+    }
+
+    public void setData(List<DataBean> data) {
         this.data = data;
     }
 
@@ -38,18 +38,36 @@ public class FixTableAdapter implements IDataAdapter {
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return data.size();
     }
 
     @Override
-    public void convertData(int position,TextView bindView,int columnIndex) {
-        String[] oneRow = data[position];
+    public void convertData(int position,List<TextView> bindViews) {
+        DataBean dataBean = data.get(position);
 
-        bindView.setText(oneRow[columnIndex]);
+        bindViews.get(0)
+                .setText(dataBean.id);
+        bindViews.get(1)
+                .setText(dataBean.data1);
+        bindViews.get(2)
+                .setText(dataBean.data2);
+        bindViews.get(3)
+                .setText(dataBean.data3);
+        bindViews.get(4)
+                .setText(dataBean.data4);
+        bindViews.get(5)
+                .setText(dataBean.data5);
+        bindViews.get(6)
+                .setText(dataBean.data6);
+        bindViews.get(7)
+                .setText(dataBean.data7);
+        bindViews.get(8)
+                .setText(dataBean.data8);
+
     }
 
     @Override
     public void convertLeftData(int position,TextView bindView) {
-        bindView.setText(data[position][0]);
+        bindView.setText(data.get(position).id);
     }
 }

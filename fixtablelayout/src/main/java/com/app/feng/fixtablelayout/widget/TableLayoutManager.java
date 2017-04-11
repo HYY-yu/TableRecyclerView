@@ -2,6 +2,7 @@ package com.app.feng.fixtablelayout.widget;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,12 +58,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 View child = getChildAt(i);
 
                 if (dy > 0) {//需要回收当前屏幕，上越界的View
-                    if (getDecoratedBottom(child) < offsetTop) {
+                    if (getDecoratedBottom(child) - dy < 0) {
                         removeAndRecycleView(child,recycler);
                         firstVisPos++;
                     }
                 } else if (dy < 0) {//回收当前屏幕，下越界的View
-                    if (getDecoratedTop(child) > getHeight() - getPaddingBottom()) {
+                    if (getDecoratedTop(child) - dy > getHeight() - getPaddingBottom()) {
                         removeAndRecycleView(child,recycler);
                         lastVisPos--;
                     }
@@ -86,8 +87,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
                 measureChild(child,0,0);
 
-//                Log.i("feng",
-//                      " child width " + child.getMeasuredWidth() + "child height" + child.getMeasuredHeight());
+                //                Log.i("feng",
+                //                      " child width " + child.getMeasuredWidth() + "child height" + child.getMeasuredHeight());
 
                 if (offsetTop - dy > getHeight()) {
                     // 到了屏幕的末尾 退出布局
@@ -101,12 +102,14 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                     if (aRect == null) {
                         aRect = new Rect();
                     }
-                    aRect.set(-horizontalOffset,offsetTop,-horizontalOffset + w,offsetTop + h);
+                    aRect.set(0,offsetTop + verticalOffset,w,offsetTop + h + verticalOffset);
                     mItemAnchorMap.put(i,aRect);
-                    offsetTop += h;
 
                     // 布局到RV上
-                        layoutDecorated(child,aRect.left,aRect.top,aRect.right,aRect.bottom);
+                    layoutDecorated(child,-horizontalOffset,offsetTop,-horizontalOffset + w,
+                                    offsetTop + h);
+                    offsetTop += h;
+
                 }
             }
             //添加完后，判断是否已经没有更多的ItemView，并且此时屏幕仍有空白，则需要修正dy
@@ -128,6 +131,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
             for (int i = maxPos; i >= firstVisPos; i--) {
                 Rect aRect = mItemAnchorMap.get(i);
+
                 if (aRect != null) {
                     if (aRect.bottom - verticalOffset - dy < 0) {
                         firstVisPos = i + 1;
@@ -135,8 +139,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                     } else {
                         View child = recycler.getViewForPosition(i);
                         addView(child,0);
-
                         measureChild(child,0,0);
+
                         layoutDecorated(child,aRect.left - horizontalOffset,
                                         aRect.top - verticalOffset,aRect.right - horizontalOffset,
                                         aRect.bottom - verticalOffset);
@@ -145,9 +149,9 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             }
         }
 
-        //        Log.d("TAG",
-        //              "count= [" + getChildCount() + "]" + ",[recycler.getScrapList().size():" + recycler.getScrapList()
-        //                      .size() + ", dy:" + dy + ",  mVerticalOffset" + verticalOffset + ", ");
+        Log.d("TAG",
+              "count= [" + getChildCount() + "]" + ",[recycler.getScrapList().size():" + recycler.getScrapList()
+                      .size() + ", dy:" + dy + ",  mVerticalOffset" + verticalOffset + ", ");
 
         return dy;
     }
@@ -255,7 +259,6 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                     realOffset = Math.min(realOffset,-gap);
                 }
             }
-
         }
 
         realOffset = fill(recycler,state,realOffset);

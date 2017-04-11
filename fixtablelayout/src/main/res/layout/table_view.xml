@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
+
     <HorizontalScrollView
         android:id="@+id/titleView"
         android:layout_width="wrap_content"
@@ -69,5 +72,24 @@
         android:id="@+id/left_top_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <FrameLayout
+        android:id="@+id/load_mask"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#fff"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+        <ProgressBar
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
