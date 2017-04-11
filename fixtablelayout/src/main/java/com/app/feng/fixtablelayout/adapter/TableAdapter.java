@@ -20,9 +20,6 @@ import java.util.List;
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> {
 
-    public static final int VIEW_TYPE_NORMAL = 1;
-    public static final int VIEW_TYPE_FOOTER = -1;
-
     private HorizontalScrollView titleView;
     private RecyclerView leftViews;
     private TextView left_top_view;
@@ -209,8 +206,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     }
 
     public void notifyLoadData(int startPos,int loadNum) {
-        notifyItemRangeInserted(startPos,loadNum);
-        leftViews.getAdapter()
-                .notifyItemRangeInserted(startPos,loadNum);
+//        notifyItemRangeInserted(startPos,loadNum);
+//        leftViews.getAdapter()
+//                .notifyItemRangeInserted(startPos,loadNum);
+        notifyDataSetChanged();
+        leftViews.getAdapter().notifyDataSetChanged();
     }
 }

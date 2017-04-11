@@ -45,8 +45,7 @@
         app:layout_constraintRight_toRightOf="@+id/left_top_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleView"
-        >
-    </android.support.v7.widget.RecyclerView>
+        />
 
     <View
         android:id="@+id/leftView_shadows"

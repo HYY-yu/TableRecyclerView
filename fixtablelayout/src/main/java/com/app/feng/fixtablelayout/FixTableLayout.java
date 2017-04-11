@@ -3,6 +3,8 @@ package com.app.feng.fixtablelayout;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -20,10 +22,14 @@ import com.app.feng.fixtablelayout.inter.ILoadMoreListener;
 import com.app.feng.fixtablelayout.widget.SingleLineItemDecoration;
 import com.app.feng.fixtablelayout.widget.TableLayoutManager;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by feng on 2017/4/2.
  */
 public class FixTableLayout extends FrameLayout {
+
+    public static final int MESSAGE_FIX_TABLE_LOAD_COMPLETE = 1001;
 
     RecyclerView recyclerView;
     HorizontalScrollView titleView;
@@ -46,6 +52,7 @@ public class FixTableLayout extends FrameLayout {
 
     private boolean isLoading = false;
     private ILoadMoreListener loadMoreListener;
+    private boolean hasMoreData = true;
 
     public void setLoadMoreListener(ILoadMoreListener loadMoreListener) {
         this.loadMoreListener = loadMoreListener;
@@ -110,7 +117,13 @@ public class FixTableLayout extends FrameLayout {
         leftViewShadow = view.findViewById(R.id.leftView_shadows);
         fl_load_mask = (FrameLayout) view.findViewById(R.id.load_mask);
 
-        leftViews.setLayoutManager(new TableLayoutManager());
+        TableLayoutManager t1 = new TableLayoutManager();
+        TableLayoutManager t2 = new TableLayoutManager();
+        Log.i("feng"," -- t : " + t1.toString().substring(54) + " t_left: " + t2.toString()
+                .substring(54));
+        recyclerView.setLayoutManager(t1);
+        leftViews.setLayoutManager(t2);
+
         leftViews.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
         leftViews.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -127,14 +140,9 @@ public class FixTableLayout extends FrameLayout {
             leftViewShadow.setVisibility(GONE);
         }
 
-        recyclerView.setLayoutManager(new TableLayoutManager());
         recyclerView.addItemDecoration(new SingleLineItemDecoration(divider_height,divider_color));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView,int newState) {
-                super.onScrollStateChanged(recyclerView,newState);
-            }
 
             @Override
             public void onScrolled(RecyclerView recyclerView,int dx,int dy) {
@@ -160,25 +168,15 @@ public class FixTableLayout extends FrameLayout {
             public void onScrollStateChanged(RecyclerView recyclerView,int newState) {
                 super.onScrollStateChanged(recyclerView,newState);
                 // 当用户滑动到底部并且使用fling手势
-                if (newState == RecyclerView.SCROLL_STATE_SETTLING && lastVisablePos == recyclerView.getAdapter()
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisablePos == recyclerView.getAdapter()
                         .getItemCount() - 1) {
 
-                    if (!isLoading) {
+                    if (!isLoading && hasMoreData) {
                         isLoading = true;
                         fl_load_mask.setVisibility(VISIBLE);
-                        TableAdapter tableAdapter = (TableAdapter) recyclerView.getAdapter();
-                        int startPos = tableAdapter.getItemCount();
 
-                        int loadNum = loadMoreListener.loadMoreData();
-                        if (loadNum > 0) {
-                            //通知Adapter更新数据
-                            tableAdapter.notifyLoadData(startPos,loadNum);
-                        }
-
-                        Log.i("fixtablelayout","load more completed loadNum :" + loadNum);
-
-                        fl_load_mask.setVisibility(GONE);
-                        isLoading = false;
+                        loadMoreListener.loadMoreData(
+                                new FixTableHandler(FixTableLayout.this,recyclerView));
                     }
                 }
                 //                    Log.i("feng","滑动到底部 -- 此时的View Bottom：" + recyclerView.getLayoutManager()
@@ -192,6 +190,7 @@ public class FixTableLayout extends FrameLayout {
                 super.onScrolled(recyclerView,dx,dy);
                 View bottomView = recyclerView.getChildAt(recyclerView.getChildCount() - 1);
                 lastVisablePos = recyclerView.getChildAdapterPosition(bottomView);
+
             }
         });
     }
@@ -207,5 +206,39 @@ public class FixTableLayout extends FrameLayout {
                 .setDataAdapter(dataAdapter)
                 .create();
         recyclerView.setAdapter(tableAdapter);
+    }
+
+    static class FixTableHandler extends Handler {
+        WeakReference<RecyclerView> recyclerViewWeakReference;
+        WeakReference<FixTableLayout> fixTableLayoutWeakReference;
+
+        public FixTableHandler(FixTableLayout fixTableLayout,RecyclerView recyclerView) {
+            recyclerViewWeakReference = new WeakReference<>(recyclerView);
+            fixTableLayoutWeakReference = new WeakReference<>(fixTableLayout);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == MESSAGE_FIX_TABLE_LOAD_COMPLETE) {
+
+                RecyclerView recyclerView = recyclerViewWeakReference.get();
+                FixTableLayout fixTableLayout = fixTableLayoutWeakReference.get();
+                TableAdapter tableAdapter = (TableAdapter) recyclerView.getAdapter();
+                int startPos = tableAdapter.getItemCount() - 1;
+                int loadNum = msg.arg1;
+                if (msg.arg1 > 0) {
+                    //通知Adapter更新数据
+                    tableAdapter.notifyLoadData(startPos,loadNum);
+//                    Log.i("fixtablelayout","load more completed loadNum :" + loadNum + "scrollTo " +
+//                            ":" + fixTableLayout.lastVisableMask);
+
+                }else{
+                    //没有数据了
+                    fixTableLayout.hasMoreData = false;
+                }
+                fixTableLayout.fl_load_mask.setVisibility(GONE);
+                fixTableLayout.isLoading = false;
+            }
+        }
     }
 }

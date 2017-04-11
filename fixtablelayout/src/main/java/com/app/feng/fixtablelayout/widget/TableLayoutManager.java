@@ -26,7 +26,10 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
     public TableLayoutManager() {
         super();
+        setAutoMeasureEnabled(true);
     }
+
+    int oldChildCount = 1;
 
     @Override
     public void onLayoutChildren(
@@ -40,12 +43,25 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             return;
         }
 
-        detachAndScrapAttachedViews(recycler);
+        Log.i("feng",
+              " tag  ?  count " + getChildCount() + " change: " + state.didStructureChange() + " obj : " + this.toString() + " PreLayout :" + state.isPreLayout() + " Measure : " + state.isMeasuring());
 
+        if (getChildCount() > 0 && state.didStructureChange()) {
+            //Adapter DataSetChange
+            ///// 运行 下列语句, 且过后的可能还有一个再次调用,拦截它
+
+            oldChildCount = getChildCount();
+            fill(recycler,state,0);
+            return;
+        } else if (getChildCount() - oldChildCount > 0  && !state.didStructureChange()){
+            fill(recycler,state,0);
+            return;
+        }
+
+        detachAndScrapAttachedViews(recycler);
         verticalOffset = 0;
         firstVisPos = 0;
         lastVisPos = state.getItemCount();
-
         fill(recycler,state,0);
     }
 
@@ -86,9 +102,6 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 addView(child);
 
                 measureChild(child,0,0);
-
-                //                Log.i("feng",
-                //                      " child width " + child.getMeasuredWidth() + "child height" + child.getMeasuredHeight());
 
                 if (offsetTop - dy > getHeight()) {
                     // 到了屏幕的末尾 退出布局
@@ -149,9 +162,9 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             }
         }
 
-        Log.d("TAG",
-              "count= [" + getChildCount() + "]" + ",[recycler.getScrapList().size():" + recycler.getScrapList()
-                      .size() + ", dy:" + dy + ",  mVerticalOffset" + verticalOffset + ", ");
+        //        Log.d("TAG",
+        //              "count= [" + getChildCount() + "]" + ",[recycler.getScrapList().size():" + recycler.getScrapList()
+        //                      .size() + ", dy:" + dy + ",  mVerticalOffset" + verticalOffset + ", ");
 
         return dy;
     }

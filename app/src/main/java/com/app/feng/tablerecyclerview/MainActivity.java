@@ -1,6 +1,8 @@
 package com.app.feng.tablerecyclerview;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 50; i++) {
             data.add(new DataBean("id__","data1","data2","data3","data4","data5","data6","data7",
                                   "data8"));
         }
@@ -42,23 +44,31 @@ public class MainActivity extends AppCompatActivity {
         fixTableLayout.setAdapter(fixTableAdapter);
 
         //LoadMoreData要设置 请在setAdapter之后
-        //fixTableLayout.enableLoadMoreData();
+        fixTableLayout.enableLoadMoreData();
 
         fixTableLayout.setLoadMoreListener(new ILoadMoreListener() {
             @Override
-            public int loadMoreData() {
+            public void loadMoreData(final Handler handler) {
                 Log.i("feng"," 更新了Data --- ");
+                final Message message = handler.obtainMessage(FixTableLayout.MESSAGE_FIX_TABLE_LOAD_COMPLETE);
 
-                if (currentPage <= totalPage) {
-                    for (int i = 0; i < 500; i++) {
-                        data.add(new DataBean("update_id","update_data","data2","data3","data4","data5",
-                                              "data6","data7","data8"));
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentPage <= totalPage) {
+                            for (int i = 0; i < 50; i++) {
+                                data.add(new DataBean("update_id","update_data","data2","data3","data4","data5",
+                                                      "data6","data7","data8"));
+                            }
+                            currentPage++;
+                            message.arg1 = 50;
+                        } else {
+                            message.arg1 = 0;
+                        }
+                        handler.sendMessage(message);
                     }
-                    currentPage++;
-                    return 1;
-                } else {
-                    return 0;
-                }
+                }).start();
+
             }
         });
     }
