@@ -2,7 +2,6 @@ package com.app.feng.fixtablelayout.widget;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +42,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             return;
         }
 
-        Log.i("feng",
-              " tag  ?  count " + getChildCount() + " change: " + state.didStructureChange() + " obj : " + this.toString() + " PreLayout :" + state.isPreLayout() + " Measure : " + state.isMeasuring());
+        //        Log.i("feng",
+        //              " tag  ?  count " + getChildCount() + " change: " + state.didStructureChange() + " obj : " + this.toString() + " PreLayout :" + state.isPreLayout() + " Measure : " + state.isMeasuring());
 
         if (getChildCount() > 0 && state.didStructureChange()) {
             //Adapter DataSetChange
@@ -53,7 +52,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             oldChildCount = getChildCount();
             fill(recycler,state,0);
             return;
-        } else if (getChildCount() - oldChildCount > 0  && !state.didStructureChange()){
+        } else if (getChildCount() - oldChildCount > 0 && !state.didStructureChange()) {
             fill(recycler,state,0);
             return;
         }
@@ -74,17 +73,30 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 View child = getChildAt(i);
 
                 if (dy > 0) {//需要回收当前屏幕，上越界的View
-                    if (getDecoratedBottom(child) - dy < 0) {
+                    if (getDecoratedBottom(child) < 0) {
                         removeAndRecycleView(child,recycler);
                         firstVisPos++;
                     }
                 } else if (dy < 0) {//回收当前屏幕，下越界的View
-                    if (getDecoratedTop(child) - dy > getHeight() - getPaddingBottom()) {
+                    if (getDecoratedTop(child) > getHeight() - getPaddingBottom()) {
                         removeAndRecycleView(child,recycler);
                         lastVisPos--;
                     }
                 }
             }
+            //            for (int i = 0; i < getChildCount(); i++) {
+            //                View child = getChildAt(i);
+            //                // 扫描头部 找能回收的View
+            //                if (dy > 0) {//需要回收当前屏幕，上越界的View
+            //                    if (getDecoratedBottom(child) - dy < 0) {
+            //                        removeAndRecycleView(child,recycler);
+            //                        firstVisPos++;
+            //                    }else{
+            //                        // 没有   退出
+            //                        break;
+            //                    }
+            //                }
+            //            }
         }
 
         if (dy >= 0) {
@@ -128,7 +140,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             //添加完后，判断是否已经没有更多的ItemView，并且此时屏幕仍有空白，则需要修正dy
             View lastChild = getChildAt(getChildCount() - 1);
             if (getPosition(lastChild) == getItemCount() - 1) {
-                int gap = getHeight() - getPaddingBottom() - getDecoratedBottom(lastChild);
+                int gap = getHeight() - getDecoratedBottom(lastChild);
                 if (gap > 0) {
                     dy -= gap;
                 }

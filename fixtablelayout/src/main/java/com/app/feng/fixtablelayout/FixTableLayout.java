@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -119,8 +118,8 @@ public class FixTableLayout extends FrameLayout {
 
         TableLayoutManager t1 = new TableLayoutManager();
         TableLayoutManager t2 = new TableLayoutManager();
-        Log.i("feng"," -- t : " + t1.toString().substring(54) + " t_left: " + t2.toString()
-                .substring(54));
+//        Log.i("feng"," -- t : " + t1.toString().substring(54) + " t_left: " + t2.toString()
+//                .substring(54));
         recyclerView.setLayoutManager(t1);
         leftViews.setLayoutManager(t2);
 

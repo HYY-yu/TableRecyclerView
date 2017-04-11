@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 80; i++) {
             data.add(new DataBean("id__","data1","data2","data3","data4","data5","data6","data7",
                                   "data8"));
         }
