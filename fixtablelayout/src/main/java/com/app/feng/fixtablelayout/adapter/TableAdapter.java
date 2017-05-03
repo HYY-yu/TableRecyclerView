@@ -110,7 +110,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     class LeftViewAdapter extends RecyclerView.Adapter<LeftViewAdapter.LeftViewHolder> {
 
         private void bindView(int position,View v) {
-            TextView child = (TextView) v;
+            SingleLineLinearLayout singleLineLinearLayout = (SingleLineLinearLayout) v;
+            TextView child = (TextView) singleLineLinearLayout.getChildAt(0);
             TVHelper.setTextView(child," ",parametersHolder.item_gravity,
                                  parametersHolder.item_width,parametersHolder.item_padding);
 
@@ -125,7 +126,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         @Override
         public LeftViewHolder onCreateViewHolder(
                 ViewGroup parent,int viewType) {
-            return new LeftViewHolder(new TextView(parent.getContext()));
+            SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(
+                    parent.getContext());
+            singleLineLinearLayout.addView(new TextView(parent.getContext()));
+            return new LeftViewHolder(singleLineLinearLayout);
         }
 
         @Override
