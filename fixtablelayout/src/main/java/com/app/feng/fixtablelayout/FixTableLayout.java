@@ -133,6 +133,14 @@ public class FixTableLayout extends FrameLayout {
             }
         });
 
+        titleView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v,MotionEvent event) {
+                recyclerView.onTouchEvent(event);
+                return true;
+            }
+        });
+
         if (show_left_shadow) {
             leftViewShadow.setVisibility(VISIBLE);
         } else {
