@@ -24,6 +24,10 @@ fixtable show-left-view_shadow"| format="boolean" |是否显示leftView的阴影
 --- 
  在fixtablelayout的build下找到output文件夹, 将fixtablelayout.aar导入项目.
  
+**todo**
+--- 
+- [ ] 可定制leftView的列数
+- [ ] 可自由修改表格中每列的宽度
  
  
 **License**
