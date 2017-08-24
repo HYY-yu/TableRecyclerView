@@ -28,7 +28,7 @@ fixtable show-left-view_shadow"| format="boolean" |是否显示leftView的阴影
 --- 
 - [ ] 可定制leftView的列数
 - [ ] 可自由修改表格中每列的宽度
- 
+- [ ] 支持gradle的导入方式
  
 **License**
 --- 
