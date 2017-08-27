@@ -1,8 +1,8 @@
 # TableRecylerView
-LayoutManager实现的大表格控件
 
+[![](https://jitpack.io/v/HYY-yu/TableRecyclerView.svg)](https://jitpack.io/#HYY-yu/TableRecyclerView)
 --- 
-初步实现效果,欢迎issues和fork
+  LayoutManager实现的大表格控件, 初步实现效果,欢迎issues和fork
 --- 
 ![github](https://github.com/HYY-yu/TableRecylerView/blob/master/cat1.gif "show")
 
@@ -22,13 +22,24 @@ fixtable show-left-view_shadow"| format="boolean" |是否显示leftView的阴影
 
 **使用**
 --- 
- 在fixtablelayout的build下找到output文件夹, 将fixtablelayout.aar导入项目.
+ 在工程的build.gradle下添加：
+ ``` 
+ allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+ ```
+ 
+ 在项目的build.gradle下:
+ ```compile 'com.github.HYY-yu:TableRecyclerView:v1.0.0'```
  
 **todo**
 --- 
 - [ ] 可定制leftView的列数
 - [ ] 可自由修改表格中每列的宽度
-- [ ] 支持gradle的导入方式
+- [x] 支持gradle的导入方式
  
 **License**
 --- 
