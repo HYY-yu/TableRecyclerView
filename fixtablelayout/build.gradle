@@ -32,3 +32,9 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 }
+
+/** 以下开始是将Android Library上传到jitPack的相关配置**/
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.HYY-yu'
