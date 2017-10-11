@@ -1,6 +1,7 @@
 package com.app.feng.fixtablelayout.inter;
 
 import android.os.Handler;
+import android.os.Message;
 
 /**
  * Created by feng on 2017/4/10.
@@ -8,6 +9,6 @@ import android.os.Handler;
 
 public interface ILoadMoreListener {
 
-    void loadMoreData(Handler handler);
+    void loadMoreData(Message message);
 
 }

@@ -6,8 +6,6 @@
     android:layout_height="match_parent">
 
 
-
-
     <HorizontalScrollView
         android:id="@+id/titleView"
         android:layout_width="wrap_content"
@@ -51,7 +49,7 @@
         android:id="@+id/leftView_shadows"
         android:layout_width="4dp"
         android:layout_height="0dp"
-        android:background="@drawable/shadow_bg"
+        android:background="@drawable/shadow"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/leftViews"
@@ -61,7 +59,7 @@
     <View
         android:layout_width="0dp"
         android:layout_height="5dp"
-        android:background="@drawable/shadow_bg2"
+        android:background="@drawable/shadow_rotate90"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleView"

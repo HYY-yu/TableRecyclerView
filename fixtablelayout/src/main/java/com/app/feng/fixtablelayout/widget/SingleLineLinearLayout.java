@@ -35,15 +35,18 @@ public class SingleLineLinearLayout extends ViewGroup {
 
         int width = 0;
         int height = 0;
+
 //        Log.i("feng",
 //              "single 调用 onMeasure - widthMode :" + widthMode + " width size:  " + widthSize + " height size " + heightSize);
 
         for (int i = 0; i < getChildCount(); i++) {
             View childView = getChildAt(i);
+
             int widthChild = MeasureSpec.makeMeasureSpec(widthSize,MeasureSpec.UNSPECIFIED);
             int heightChild = MeasureSpec.makeMeasureSpec(heightSize,MeasureSpec.UNSPECIFIED);
 
             childView.measure(widthChild,heightChild);
+
             width += childView.getMeasuredWidth();
             height = Math.max(height,childView.getMeasuredHeight());
         }

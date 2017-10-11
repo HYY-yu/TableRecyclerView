@@ -12,8 +12,16 @@ public interface IDataAdapter {
 
     String getTitleAt(int pos);
 
+    /**
+     * 共有几列
+     * @return
+     */
     int getTitleCount();
 
+    /**
+     * 共有几行
+     * @return
+     */
     int getItemCount();
 
     void convertData(int position,List<TextView> bindViews);

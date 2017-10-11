@@ -20,19 +20,15 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
     private SparseArray<Rect> mItemAnchorMap = new SparseArray<>();
 
-    //    Bitmap titleViewBitmap;
-    //    private Rect displayFrame = new Rect();
+    private int oldChildCount = 1;
 
     public TableLayoutManager() {
         super();
         setAutoMeasureEnabled(true);
     }
 
-    int oldChildCount = 1;
-
     @Override
-    public void onLayoutChildren(
-            RecyclerView.Recycler recycler,RecyclerView.State state) {
+    public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (state.getItemCount() == 0) {
             detachAndScrapAttachedViews(recycler);
             return;
@@ -47,13 +43,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
         if (getChildCount() > 0 && state.didStructureChange()) {
             //Adapter DataSetChange
-            ///// 运行 下列语句, 且过后的可能还有一个再次调用,拦截它
-
+            // 运行 下列语句, 且过后的可能还有一个再次调用,拦截它
             oldChildCount = getChildCount();
-            fill(recycler,state,0);
+            fill(recycler, state, 0);
             return;
         } else if (getChildCount() - oldChildCount > 0 && !state.didStructureChange()) {
-            fill(recycler,state,0);
+            fill(recycler, state, 0);
             return;
         }
 
@@ -61,10 +56,10 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         verticalOffset = 0;
         firstVisPos = 0;
         lastVisPos = state.getItemCount();
-        fill(recycler,state,0);
+        fill(recycler, state, 0);
     }
 
-    private int fill(RecyclerView.Recycler recycler,RecyclerView.State state,int dy) {
+    private int fill(RecyclerView.Recycler recycler, RecyclerView.State state, int dy) {
         int offsetTop = 0;
 
         //回收越界子View
@@ -74,37 +69,25 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
                 if (dy > 0) {//需要回收当前屏幕，上越界的View
                     if (getDecoratedBottom(child) < 0) {
-                        removeAndRecycleView(child,recycler);
+                        removeAndRecycleView(child, recycler);
                         firstVisPos++;
                     }
                 } else if (dy < 0) {//回收当前屏幕，下越界的View
                     if (getDecoratedTop(child) > getHeight() - getPaddingBottom()) {
-                        removeAndRecycleView(child,recycler);
+                        removeAndRecycleView(child, recycler);
                         lastVisPos--;
                     }
                 }
             }
-            //            for (int i = 0; i < getChildCount(); i++) {
-            //                View child = getChildAt(i);
-            //                // 扫描头部 找能回收的View
-            //                if (dy > 0) {//需要回收当前屏幕，上越界的View
-            //                    if (getDecoratedBottom(child) - dy < 0) {
-            //                        removeAndRecycleView(child,recycler);
-            //                        firstVisPos++;
-            //                    }else{
-            //                        // 没有   退出
-            //                        break;
-            //                    }
-            //                }
-            //            }
         }
 
         if (dy >= 0) {
             int minPos = firstVisPos;
             lastVisPos = getItemCount() - 1;
+
             if (getChildCount() > 0) {
                 View lastView = getChildAt(getChildCount() - 1);
-                minPos = getPosition(lastView) + 1;//从最后一个View+1开始吧
+                minPos = getPosition(lastView) + 1; //从最后一个View + 1开始吧
                 offsetTop = getDecoratedBottom(lastView);
             }
 
@@ -113,11 +96,11 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 View child = recycler.getViewForPosition(i);
                 addView(child);
 
-                measureChild(child,0,0);
+                measureChild(child, 0, 0);
 
                 if (offsetTop - dy > getHeight()) {
                     // 到了屏幕的末尾 退出布局
-                    removeAndRecycleView(child,recycler);
+                    removeAndRecycleView(child, recycler);
                     lastVisPos = i - 1;
                 } else {
                     int w = getDecoratedMeasuredWidth(child);
@@ -127,12 +110,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                     if (aRect == null) {
                         aRect = new Rect();
                     }
-                    aRect.set(0,offsetTop + verticalOffset,w,offsetTop + h + verticalOffset);
-                    mItemAnchorMap.put(i,aRect);
+                    aRect.set(0, offsetTop + verticalOffset, w, offsetTop + h + verticalOffset);
+                    mItemAnchorMap.put(i, aRect);
 
                     // 布局到RV上
-                    layoutDecorated(child,-horizontalOffset,offsetTop,-horizontalOffset + w,
-                                    offsetTop + h);
+                    layoutDecorated(child, -horizontalOffset, offsetTop, -horizontalOffset + w,
+                            offsetTop + h);
                     offsetTop += h;
 
                 }
@@ -163,12 +146,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                         break;
                     } else {
                         View child = recycler.getViewForPosition(i);
-                        addView(child,0);
-                        measureChild(child,0,0);
+                        addView(child, 0);
+                        measureChild(child, 0, 0);
 
-                        layoutDecorated(child,aRect.left - horizontalOffset,
-                                        aRect.top - verticalOffset,aRect.right - horizontalOffset,
-                                        aRect.bottom - verticalOffset);
+                        layoutDecorated(child, aRect.left - horizontalOffset,
+                                aRect.top - verticalOffset, aRect.right - horizontalOffset,
+                                aRect.bottom - verticalOffset);
                     }
                 }
             }
@@ -181,40 +164,10 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         return dy;
     }
 
-    //    private void fillView(View view,RecyclerView.Recycler recycler) {
-    //        Rect anchorPoint = mItemAnchorMap.get(getPosition(view));
-    //
-    //        Log.i("feng","onLayout : " + isViewPartiallyVisible(view,false,false));
-    //
-    //        if (isViewPartiallyVisible(view,false,false)) {
-    //            layoutDecorated(view,anchorPoint.left,anchorPoint.top,anchorPoint.right,
-    //                            anchorPoint.bottom);
-    //
-    //        } else {
-    //            //不可见的回收
-    //            removeAndRecycleView(view,recycler);
-    //        }
-    //    }
-    //
-    //    @Override
-    //    public boolean isViewPartiallyVisible(
-    //            @NonNull View child,boolean completelyVisible,boolean acceptEndPointInclusion) {
-    //        int pos = getPosition(child);
-    //        Rect anchorChild = mItemAnchorMap.get(pos);
-    //
-    //        displayFrame.set(0,0,getWidth(),getHeight());
-    //
-    //        if (completelyVisible) {
-    //            return displayFrame.contains(anchorChild);
-    //        } else {
-    //            return Rect.intersects(displayFrame,anchorChild);
-    //        }
-    //    }
-
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                             ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -229,17 +182,15 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollHorizontallyBy(
-            int dx,RecyclerView.Recycler recycler,RecyclerView.State state) {
+            int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        View firstView = getChildAt(0);
 
-        View aView = getChildAt(0);
-
-
-        int aViewWidth = aView.getMeasuredWidth();
-        if (aViewWidth <= getWidth()) {
+        int firstViewWidth = firstView.getMeasuredWidth();
+        if (firstViewWidth <= getWidth()) {
             return 0;
         }
 
-        if (horizontalOffset + dx > aViewWidth - getWidth()) {
+        if (horizontalOffset + dx > firstViewWidth - getWidth()) {
             dx = 0;
         } else if (horizontalOffset + dx <= 0) {
             dx = 0;
@@ -254,17 +205,17 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollVerticallyBy(
-            int dy,RecyclerView.Recycler recycler,RecyclerView.State state) {
+            int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (dy == 0 || getChildCount() == 0) {
             return 0;
         }
         int realOffset = dy;
 
-        View topView = getChildAt(0);
-        View bottomView = getChildAt(getChildCount() - 1);
+        View firstView = getChildAt(0);
+        View lastView = getChildAt(getChildCount() - 1);
 
         //Optimize the case where the entire data set is too small to scroll
-        int viewSpan = getDecoratedBottom(bottomView) - getDecoratedTop(topView);
+        int viewSpan = getDecoratedBottom(lastView) - getDecoratedTop(firstView);
         if (viewSpan < getVerticalSpace()) {
             return 0;
         }
@@ -274,19 +225,19 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             realOffset = -verticalOffset;
         } else if (realOffset > 0) {
             //利用最后一个子View比较修正
-            if (getPosition(bottomView) == getItemCount() - 1) {
-                int gap = getHeight() - getPaddingBottom() - getDecoratedBottom(bottomView);
+            if (getPosition(lastView) == getItemCount() - 1) {
+                int gap = getHeight() - getPaddingBottom() - getDecoratedBottom(lastView);
                 if (gap > 0) {
                     realOffset = -gap;
                 } else if (gap == 0) {
                     realOffset = 0;
                 } else {
-                    realOffset = Math.min(realOffset,-gap);
+                    realOffset = Math.min(realOffset, -gap);
                 }
             }
         }
 
-        realOffset = fill(recycler,state,realOffset);
+        realOffset = fill(recycler, state, realOffset);
         verticalOffset += realOffset;
         offsetChildrenVertical(-realOffset);
 

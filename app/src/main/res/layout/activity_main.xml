@@ -14,7 +14,6 @@
         app:fixtable_item_gravity="CENTER"
         app:fixtable_item_top_bottom_padding="8dp"
         app:fixtable_item_width="100dp"
-        app:fixtable_column_1_color="#C5EFD8"
         app:fixtable_show_left_view_shadow="true"
         />
 

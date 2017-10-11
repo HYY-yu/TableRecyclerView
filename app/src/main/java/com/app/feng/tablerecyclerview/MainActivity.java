@@ -43,15 +43,14 @@ public class MainActivity extends AppCompatActivity {
         final FixTableAdapter fixTableAdapter = new FixTableAdapter(title,data);
         fixTableLayout.setAdapter(fixTableAdapter);
 
-        //LoadMoreData要设置 请在setAdapter之后
+        //LoadMoreData如果要设置 请在setAdapter之后
         fixTableLayout.enableLoadMoreData();
 
         fixTableLayout.setLoadMoreListener(new ILoadMoreListener() {
             @Override
-            public void loadMoreData(final Handler handler) {
-                Log.i("feng"," 更新了Data --- ");
-                final Message message = handler.obtainMessage(FixTableLayout.MESSAGE_FIX_TABLE_LOAD_COMPLETE);
-
+            public void loadMoreData(final Message message) {
+                Log.i("feng"," 加载更多 Data --- ");
+                // 请自己开启线程加载数据，并通过message发送给fixTableLayout
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -61,14 +60,13 @@ public class MainActivity extends AppCompatActivity {
                                                       "data6","data7","data8"));
                             }
                             currentPage++;
-                            message.arg1 = 50;
+                            message.arg1 = 50; // 更新了50条数据
                         } else {
                             message.arg1 = 0;
                         }
-                        handler.sendMessage(message);
+                        message.sendToTarget();
                     }
                 }).start();
-
             }
         });
     }

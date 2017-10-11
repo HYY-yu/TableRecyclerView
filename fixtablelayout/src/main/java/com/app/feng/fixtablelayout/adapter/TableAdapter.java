@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.app.feng.fixtablelayout.inter.IDataAdapter;
 import com.app.feng.fixtablelayout.widget.SingleLineLinearLayout;
-import com.app.feng.fixtablelayout.widget.TVHelper;
+import com.app.feng.fixtablelayout.widget.TextViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     private IDataAdapter dataAdapter;
 
     private TableAdapter(
-            HorizontalScrollView titleView,RecyclerView leftViews,TextView left_top_view,
-            ParametersHolder parametersHolder,IDataAdapter dataAdapter) {
+            HorizontalScrollView titleView, RecyclerView leftViews, TextView left_top_view,
+            ParametersHolder parametersHolder, IDataAdapter dataAdapter) {
         super();
         this.titleView = titleView;
         this.leftViews = leftViews;
@@ -43,56 +43,61 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     private void initViews() {
         left_top_view.setBackgroundColor(parametersHolder.title_color);
-        TVHelper.setTextView(left_top_view,dataAdapter.getTitleAt(0),parametersHolder.item_gravity,
-                             parametersHolder.item_width,parametersHolder.item_padding);
+        TextViewUtils.setTextView(left_top_view, dataAdapter.getTitleAt(0), parametersHolder.item_gravity,
+                parametersHolder.item_width, parametersHolder.item_padding);
 
         leftViews.setAdapter(new LeftViewAdapter());
         SingleLineLinearLayout titleChild = ((SingleLineLinearLayout) titleView.getChildAt(0));
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
-            TextView textView = TVHelper.generateTextView(titleChild.getContext(),
-                                                          dataAdapter.getTitleAt(i),
-                                                          parametersHolder.item_gravity,
-                                                          parametersHolder.item_width,
-                                                          parametersHolder.item_padding);
+            TextView textView = TextViewUtils.generateTextView(titleChild.getContext(),
+                    dataAdapter.getTitleAt(i),
+                    parametersHolder.item_gravity,
+                    parametersHolder.item_width,
+                    parametersHolder.item_padding);
 
-            titleChild.addView(textView,i);
+            titleChild.addView(textView, i);
         }
         titleChild.setBackgroundColor(parametersHolder.title_color);
     }
 
     @Override
-    public TableViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
-
+    public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(
                 parent.getContext());
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
-            TextView textView = TVHelper.generateTextView(singleLineLinearLayout.getContext()," ",
-                                                          parametersHolder.item_gravity,
-                                                          parametersHolder.item_width,
-                                                          parametersHolder.item_padding);
-            singleLineLinearLayout.addView(textView,i);
+            TextView textView = TextViewUtils.generateTextView(singleLineLinearLayout.getContext(), " ",
+                    parametersHolder.item_gravity,
+                    parametersHolder.item_width,
+                    parametersHolder.item_padding);
+            singleLineLinearLayout.addView(textView, i);
         }
 
         return new TableViewHolder(singleLineLinearLayout);
     }
 
     @Override
-    public void onBindViewHolder(TableViewHolder holder,int position) {
+    public void onBindViewHolder(TableViewHolder holder, int position) {
         SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
-        ll_content.setBackgroundColor(parametersHolder.col_2_color);
         List<TextView> bindViews = new ArrayList<>();
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
             TextView textView = (TextView) ll_content.getChildAt(i);
             bindViews.add(textView);
         }
-        dataAdapter.convertData(position,bindViews);
 
         //给奇数列设置背景
+        setBackgrandForItem(position, ll_content);
+
+        dataAdapter.convertData(position, bindViews);
+    }
+
+    private void setBackgrandForItem(int position, SingleLineLinearLayout ll_content) {
         if (position % 2 != 0) {
             ll_content.setBackgroundColor(parametersHolder.col_1_color);
+        } else {
+            ll_content.setBackgroundColor(parametersHolder.col_2_color);
         }
     }
 
@@ -101,41 +106,31 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         return dataAdapter.getItemCount();
     }
 
-    class TableViewHolder extends RecyclerView.ViewHolder {
-        TableViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
     class LeftViewAdapter extends RecyclerView.Adapter<LeftViewAdapter.LeftViewHolder> {
 
-        private void bindView(int position,View v) {
-            SingleLineLinearLayout singleLineLinearLayout = (SingleLineLinearLayout) v;
-            TextView child = (TextView) singleLineLinearLayout.getChildAt(0);
-            TVHelper.setTextView(child," ",parametersHolder.item_gravity,
-                                 parametersHolder.item_width,parametersHolder.item_padding);
-
-            child.setBackgroundColor(parametersHolder.col_2_color);
-            if (position % 2 != 0) {
-                child.setBackgroundColor(parametersHolder.col_1_color);
-            }
-
-            dataAdapter.convertLeftData(position,child);
-        }
-
         @Override
-        public LeftViewHolder onCreateViewHolder(
-                ViewGroup parent,int viewType) {
+        public LeftViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             SingleLineLinearLayout singleLineLinearLayout = new SingleLineLinearLayout(
                     parent.getContext());
-            singleLineLinearLayout.addView(new TextView(parent.getContext()));
+
+            TextView textView = TextViewUtils.generateTextView(singleLineLinearLayout.getContext(), " ",
+                    parametersHolder.item_gravity,
+                    parametersHolder.item_width,
+                    parametersHolder.item_padding);
+
+            singleLineLinearLayout.addView(textView);
             return new LeftViewHolder(singleLineLinearLayout);
         }
 
         @Override
-        public void onBindViewHolder(
-                LeftViewHolder holder,int position) {
-            bindView(position,holder.itemView);
+        public void onBindViewHolder(LeftViewHolder holder, int position) {
+            SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
+
+            TextView child = (TextView) ll_content.getChildAt(0);
+
+            setBackgrandForItem(position, ll_content);
+
+            dataAdapter.convertLeftData(position, child);
         }
 
         @Override
@@ -150,17 +145,22 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         }
     }
 
+    class TableViewHolder extends RecyclerView.ViewHolder {
+        TableViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
     public static class ParametersHolder {
         int col_1_color;
+        int col_2_color;
         int title_color;
         int item_width;
         int item_padding;
         int item_gravity;
-        int col_2_color;
 
-        public ParametersHolder(
-                int s_color,int b_color,int title_color,int item_width,int item_padding,
-                int item_gravity) {
+        public ParametersHolder(int s_color, int b_color, int title_color,
+                                int item_width, int item_padding, int item_gravity) {
             this.col_1_color = s_color;
             this.col_2_color = b_color;
             this.title_color = title_color;
@@ -199,20 +199,17 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
             return this;
         }
 
-        public TableAdapter create() {
-            return new TableAdapter(titleView,leftViews,left_top_view,parametersHolder,dataAdapter);
-        }
-
         public Builder setDataAdapter(IDataAdapter dataAdapter) {
             this.dataAdapter = dataAdapter;
             return this;
         }
+
+        public TableAdapter create() {
+            return new TableAdapter(titleView, leftViews, left_top_view, parametersHolder, dataAdapter);
+        }
     }
 
-    public void notifyLoadData(int startPos,int loadNum) {
-//        notifyItemRangeInserted(startPos,loadNum);
-//        leftViews.getAdapter()
-//                .notifyItemRangeInserted(startPos,loadNum);
+    public void notifyLoadData() {
         notifyDataSetChanged();
         leftViews.getAdapter().notifyDataSetChanged();
     }

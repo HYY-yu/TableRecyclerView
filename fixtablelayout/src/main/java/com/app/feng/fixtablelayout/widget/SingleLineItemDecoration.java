@@ -48,8 +48,7 @@ public class SingleLineItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDraw(
-            Canvas c,RecyclerView parent,RecyclerView.State state) {
+    public void onDraw(Canvas c,RecyclerView parent,RecyclerView.State state) {
         super.onDraw(c,parent,state);
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
@@ -65,8 +64,8 @@ public class SingleLineItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(
-            Rect outRect,View view,RecyclerView parent,RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect,View view,
+                               RecyclerView parent,RecyclerView.State state) {
         outRect.bottom = lineHeight;
     }
 }
