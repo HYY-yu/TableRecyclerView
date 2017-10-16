@@ -1,6 +1,7 @@
 # TableRecylerView
 
 [![](https://jitpack.io/v/HYY-yu/TableRecyclerView.svg)](https://jitpack.io/#HYY-yu/TableRecyclerView)
+[![Build Status](https://travis-ci.org/HYY-yu/TableRecyclerView.svg?branch=master)](https://travis-ci.org/HYY-yu/TableRecyclerView)
 --- 
   LayoutManager实现的大表格控件, 初步实现效果,欢迎issues和fork
 --- 
