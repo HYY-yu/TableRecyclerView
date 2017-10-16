@@ -8,6 +8,8 @@ android:
     - android-26
     - extra-android-m2repository
     - extra-android-support
+    # 如果你需要使用模拟器测试编译出来的安装包，你需要最少添加一个系统镜像配置
+    - sys-img-armeabi-v7a-android-22
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
