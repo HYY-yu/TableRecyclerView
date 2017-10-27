@@ -14,10 +14,7 @@
 
         <com.app.feng.fixtablelayout.widget.SingleLineLinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-
-        </com.app.feng.fixtablelayout.widget.SingleLineLinearLayout>
+            android:layout_height="wrap_content"/>
 
     </HorizontalScrollView>
 

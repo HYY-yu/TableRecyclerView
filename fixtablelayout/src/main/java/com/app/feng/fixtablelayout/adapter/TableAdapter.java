@@ -47,6 +47,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
                 parametersHolder.item_width, parametersHolder.item_padding);
 
         leftViews.setAdapter(new LeftViewAdapter());
+
         SingleLineLinearLayout titleChild = ((SingleLineLinearLayout) titleView.getChildAt(0));
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
@@ -81,6 +82,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     public void onBindViewHolder(TableViewHolder holder, int position) {
         SingleLineLinearLayout ll_content = (SingleLineLinearLayout) holder.itemView;
         List<TextView> bindViews = new ArrayList<>();
+
 
         for (int i = 0; i < dataAdapter.getTitleCount(); i++) {
             TextView textView = (TextView) ll_content.getChildAt(i);

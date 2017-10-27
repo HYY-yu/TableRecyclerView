@@ -35,7 +35,18 @@ fixtable show-left-view_shadow"| format="boolean" |是否显示leftView的阴影
  
  在项目的build.gradle下:
  ```compile 'com.github.HYY-yu:TableRecyclerView:v1.0.0'```
- 
+
+**示例代码**
+---
+```
+        // 一定要设置Adapter 否则看不到TableLayout
+        final FixTableAdapter fixTableAdapter = new FixTableAdapter(title,data);
+        fixTableLayout.setAdapter(fixTableAdapter);
+
+        //LoadMoreData如果要打开  请在setAdapter之后
+        fixTableLayout.enableLoadMoreData();
+```
+
 **todo**
 --- 
 - [ ] 可定制leftView的列数

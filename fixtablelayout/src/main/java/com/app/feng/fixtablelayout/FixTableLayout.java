@@ -207,7 +207,7 @@ public class FixTableLayout extends FrameLayout {
     }
 
     /**
-     * 只有enableLoadMoreData（）被执行此方法设置才有效果
+     * 只有 enableLoadMoreData()被执行此方法设置才有效果
      * @param loadMoreListener
      */
     public void setLoadMoreListener(ILoadMoreListener loadMoreListener) {
